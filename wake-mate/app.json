@@ -7,7 +7,9 @@
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "dark",
-    "platforms": ["android"],
+    "platforms": [
+      "android"
+    ],
     "android": {
       "package": "app.wakemate.dev",
       "adaptiveIcon": {
@@ -20,8 +22,7 @@
         "POST_NOTIFICATIONS",
         "SCHEDULE_EXACT_ALARM",
         "USE_EXACT_ALARM",
-        "VIBRATE",
-        "RECEIVE_BOOT_COMPLETED"
+        "VIBRATE"
       ],
       "predictiveBackGestureEnabled": false
     },

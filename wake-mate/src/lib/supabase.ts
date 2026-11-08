@@ -1,6 +1,7 @@
 import 'react-native-url-polyfill/auto';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { createClient } from '@supabase/supabase-js';
+import { AppState } from 'react-native';
 
 const url = process.env.EXPO_PUBLIC_SUPABASE_URL;
 const anonKey = process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY;
@@ -28,3 +29,9 @@ export async function ensureSession(): Promise<string> {
   if (error || !signedIn.user) throw error ?? new Error('Sign-in failed');
   return signedIn.user.id;
 }
+
+// Refresh tokens only while the app is in the foreground (pattern from the Supabase React Native guide).
+AppState.addEventListener('change', (state) => {
+  if (state === 'active') void supabase.auth.startAutoRefresh();
+  else void supabase.auth.stopAutoRefresh();
+});

@@ -1,94 +1,34 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { DateTimePickerAndroid } from '@react-native-community/datetimepicker';
-import { useCallback, useEffect, useState } from 'react';
-import {
-  Alert,
-  Pressable,
-  SafeAreaView,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native';
+import * as Notifications from 'expo-notifications';
+import { router } from 'expo-router';
+import { useEffect, useRef } from 'react';
+import { Alert, ScrollView, StyleSheet, Text } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
-import {
-  cancelAlarm,
-  formatTime,
-  localToUtcMinute,
-  requestAlarmPermission,
-  scheduleDailyAlarm,
-} from '../lib/alarm';
-import {
-  blockAndReport,
-  currentMatch,
-  joinMatch,
-  leaveMatch,
-  markAwake,
-  type MatchView,
-} from '../lib/match';
+import { AlarmClock } from '../components/AlarmClock';
+import { Banner } from '../components/Banner';
+import { MateCard } from '../components/MateCard';
+import { PrimaryButton } from '../components/PrimaryButton';
+import { useAlarm } from '../hooks/useAlarm';
+import { useMatch } from '../hooks/useMatch';
+import { scheduleTestAlarm } from '../lib/alarm';
 import { isBackendConfigured } from '../lib/supabase';
-
-const STORAGE_KEY = 'wakemate.alarm.v1';
-type SavedAlarm = { hour: number; minute: number; on: boolean };
+import { colors, space } from '../theme';
 
 export default function Home() {
-  const [alarm, setAlarm] = useState<SavedAlarm>({ hour: 7, minute: 0, on: false });
-  const [match, setMatch] = useState<MatchView | null>(null);
-  const [busy, setBusy] = useState(false);
+  const { alarm, hydrated, exactOk, notificationsDenied, turnOn, turnOff, allowExact } = useAlarm();
+  const { match, loaded, error, busy, imUp, report, leave, retry } = useMatch(alarm, hydrated);
 
-  const refreshMatch = useCallback(async () => {
-    if (!isBackendConfigured) return;
-    try {
-      setMatch(await currentMatch());
-    } catch {
-      /* offline: keep what we have */
-    }
-  }, []);
-
+  // Tapping the alarm notification opens the ringing screen.
+  const response = Notifications.useLastNotificationResponse();
+  const handled = useRef<string | null>(null);
   useEffect(() => {
-    AsyncStorage.getItem(STORAGE_KEY)
-      .then((raw) => raw && setAlarm(JSON.parse(raw) as SavedAlarm))
-      .catch(() => undefined);
-    void refreshMatch();
-  }, [refreshMatch]);
-
-  // Poll so you see your mate wake up without reopening the app.
-  useEffect(() => {
-    if (!isBackendConfigured) return;
-    const t = setInterval(refreshMatch, 5000);
-    return () => clearInterval(t);
-  }, [refreshMatch]);
-
-  const persist = (next: SavedAlarm) => {
-    setAlarm(next);
-    AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(next)).catch(() => undefined);
-  };
-
-  const enable = async (hour: number, minute: number) => {
-    setBusy(true);
-    try {
-      if (!(await requestAlarmPermission())) {
-        Alert.alert('Notifications are off', 'Allow notifications so your alarm can ring.');
-        return;
-      }
-      await scheduleDailyAlarm(hour, minute);
-      persist({ hour, minute, on: true });
-      if (isBackendConfigured) {
-        if (match && !match.paired) await leaveMatch(match.id).catch(() => undefined);
-        setMatch(await joinMatch(localToUtcMinute(hour, minute)));
-      }
-    } catch (e) {
-      Alert.alert('Could not set alarm', e instanceof Error ? e.message : String(e));
-    } finally {
-      setBusy(false);
-    }
-  };
-
-  const disable = async () => {
-    await cancelAlarm();
-    if (match && !match.paired) await leaveMatch(match.id).catch(() => undefined);
-    persist({ ...alarm, on: false });
-    setMatch(null);
-  };
+    const id = response?.notification.request.identifier;
+    const kind = response?.notification.request.content.data?.kind;
+    if (!id || handled.current === id || kind !== 'wake-alarm') return;
+    handled.current = id;
+    router.push('/ring');
+  }, [response]);
 
   const pickTime = () => {
     const value = new Date();
@@ -96,96 +36,93 @@ export default function Home() {
     DateTimePickerAndroid.open({
       value,
       mode: 'time',
-      is24Hour: true,
       onChange: (event, date) => {
-        if (event.type === 'set' && date) void enable(date.getHours(), date.getMinutes());
+        if (event.type !== 'set' || !date) return;
+        turnOn(date.getHours(), date.getMinutes()).catch((e) =>
+          Alert.alert('Could not set alarm', e instanceof Error ? e.message : String(e)),
+        );
       },
     });
   };
 
-  const imUp = async () => {
-    if (!match) return;
-    await markAwake(match.id).catch(() => undefined);
-    await refreshMatch();
-  };
-
-  const report = () => {
-    if (!match) return;
-    Alert.alert('Block and report this mate?', 'You will not be matched with them again.', [
-      { text: 'Cancel', style: 'cancel' },
+  const confirmOff = () =>
+    Alert.alert('Turn the alarm off?', 'You will also leave tomorrow\'s match.', [
+      { text: 'Keep alarm', style: 'cancel' },
       {
-        text: 'Block',
+        text: 'Turn off',
         style: 'destructive',
-        onPress: () => void blockAndReport(match.id).then(refreshMatch),
+        onPress: () => void Promise.all([turnOff(), leave()]),
       },
     ]);
-  };
+
+  const confirmReport = () =>
+    Alert.alert('Block and report this mate?', 'You will not be matched with them again.', [
+      { text: 'Cancel', style: 'cancel' },
+      { text: 'Block', style: 'destructive', onPress: () => void report() },
+    ]);
+
+  const testAlarm = () =>
+    scheduleTestAlarm().then(() =>
+      Alert.alert('Test alarm set', 'Lock your phone. It should ring in about a minute.'),
+    );
+
+  if (!hydrated) return <SafeAreaView style={styles.screen} />;
 
   return (
     <SafeAreaView style={styles.screen}>
-      <Text style={styles.title}>Wake Mate</Text>
-      <Text style={styles.sub}>Set an alarm. Get matched with someone waking up at the same time.</Text>
-
-      <Pressable onPress={pickTime} style={styles.clock}>
-        <Text style={styles.time}>{formatTime(alarm.hour, alarm.minute)}</Text>
-        <Text style={styles.hint}>{alarm.on ? 'Alarm on · tap to change' : 'Tap to set your wake-up time'}</Text>
-      </Pressable>
-
-      {alarm.on && (
-        <Pressable onPress={disable} style={[styles.btn, styles.ghost]}>
-          <Text style={styles.btnText}>Turn alarm off</Text>
-        </Pressable>
-      )}
-
-      {alarm.on && isBackendConfigured && (
-        <View style={styles.card}>
-          {!match && <Text style={styles.cardText}>Finding your mate…</Text>}
-          {match && !match.paired && (
-            <Text style={styles.cardText}>Waiting for someone else to pick {formatTime(alarm.hour, alarm.minute)}…</Text>
-          )}
-          {match?.paired && (
-            <>
-              <Text style={styles.cardTitle}>You have a mate 🎉</Text>
-              <Text style={styles.cardText}>
-                {match.mateAwake ? 'Your mate is up!' : 'Your mate is still asleep.'}
-              </Text>
-              <Pressable
-                onPress={imUp}
-                disabled={match.meAwake || busy}
-                style={[styles.btn, match.meAwake && styles.disabled]}>
-                <Text style={styles.btnText}>{match.meAwake ? "You're up ✓" : "I'm up!"}</Text>
-              </Pressable>
-              <Pressable onPress={report}>
-                <Text style={styles.link}>Block / report</Text>
-              </Pressable>
-            </>
-          )}
-        </View>
-      )}
-
-      {!isBackendConfigured && (
-        <Text style={styles.warn}>
-          Backend not configured: the alarm works, but matching is off. Copy .env.example to .env and add your Supabase keys.
+      <ScrollView contentContainerStyle={styles.content}>
+        <Text accessibilityRole="header" style={styles.title}>
+          Wake Mate
         </Text>
-      )}
+        <Text style={styles.sub}>Set an alarm. Get matched with someone waking up at the same time.</Text>
+
+        <AlarmClock hour={alarm.hour} minute={alarm.minute} on={alarm.on} onPress={pickTime} />
+
+        {notificationsDenied && (
+          <Banner tone="error" text="Notifications are off, so your alarm cannot ring. Allow them in system settings." />
+        )}
+        {alarm.on && !exactOk && (
+          <Banner
+            tone="warn"
+            text="Android may ring your alarm a few minutes late. Allow exact alarms for on-time wake-ups."
+            actionLabel="Allow exact alarms"
+            onAction={() => void allowExact()}
+          />
+        )}
+
+        {alarm.on && (
+          <>
+            <PrimaryButton label="Turn alarm off" onPress={confirmOff} variant="ghost" />
+            <PrimaryButton label="Test alarm in 1 minute" onPress={testAlarm} variant="link" hint="Rings once so you can check it works with the screen off" />
+          </>
+        )}
+
+        {alarm.on && isBackendConfigured && error && (
+          <Banner tone="error" text={`Could not reach the server. ${error}`} actionLabel="Retry" onAction={retry} />
+        )}
+        {alarm.on && isBackendConfigured && (
+          <MateCard
+            match={match}
+            loaded={loaded}
+            hour={alarm.hour}
+            minute={alarm.minute}
+            busy={busy}
+            onImUp={() => void imUp()}
+            onReport={confirmReport}
+          />
+        )}
+
+        {__DEV__ && !isBackendConfigured && (
+          <Banner tone="warn" text="Dev: backend not configured. The alarm works but matching is off. Copy .env.example to .env." />
+        )}
+      </ScrollView>
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  screen: { flex: 1, padding: 24, gap: 20 },
-  title: { color: '#fff', fontSize: 32, fontWeight: '800', marginTop: 24 },
-  sub: { color: '#b9b4e0', fontSize: 16 },
-  clock: { alignItems: 'center', backgroundColor: '#2a2556', borderRadius: 28, paddingVertical: 36 },
-  time: { color: '#fff', fontSize: 72, fontWeight: '700' },
-  hint: { color: '#b9b4e0', marginTop: 4 },
-  btn: { backgroundColor: '#f59e6b', borderRadius: 16, padding: 16, alignItems: 'center' },
-  ghost: { backgroundColor: '#3a3470' },
-  disabled: { opacity: 0.5 },
-  btnText: { color: '#14112b', fontWeight: '700', fontSize: 16 },
-  card: { backgroundColor: '#1f1b43', borderRadius: 20, padding: 20, gap: 12 },
-  cardTitle: { color: '#fff', fontSize: 20, fontWeight: '700' },
-  cardText: { color: '#d8d4f5', fontSize: 16 },
-  link: { color: '#b9b4e0', textAlign: 'center', textDecorationLine: 'underline' },
-  warn: { color: '#f5c76b', fontSize: 13 },
+  screen: { flex: 1, backgroundColor: colors.bg },
+  content: { padding: space.xl, gap: space.lg },
+  title: { color: colors.text, fontSize: 32, fontWeight: '800', marginTop: space.lg },
+  sub: { color: colors.textMuted, fontSize: 16 },
 });
