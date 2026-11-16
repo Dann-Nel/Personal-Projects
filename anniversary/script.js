@@ -79,6 +79,7 @@
     env.classList.add("open");
     const r = env.getBoundingClientRect();
     burst(r.left + r.width / 2, r.top + r.height / 3, 24);
+    navigator.vibrate?.(15);
     $("#op-hint").style.visibility = "hidden";
     $("#main").hidden = false;
     $("#op-btn").hidden = false;
@@ -92,34 +93,41 @@
       <div class="char a"><div class="bubble"></div>${charSVG("a")}</div>
       <div class="char b"><div class="bubble"></div>${charSVG("b")}</div>
       <div class="stage-heart">♥</div>`;
-    let busy = false;
+    // every action is interruptible: a new tap takes over from wherever the characters are
+    let token = 0, arriveAt = 0;
     const set = (s) => (el.dataset.state = s);
-    const say = async (who, text) => {
-      const b = $(`.char.${who} .bubble`, el);
-      b.textContent = text;
-      b.classList.add("show");
-      await wait(1800);
-      b.classList.remove("show");
-      await wait(250);
-    };
+    const bubbles = el.querySelectorAll(".bubble");
     set("apart");
     return async function run(act, lines = []) {
-      if (busy) return;
-      busy = true;
+      const me = ++token, live = () => me === token;
+      bubbles.forEach((b) => b.classList.remove("show"));
       if (act === "reset") {
-        set("back"); await wait(2300); set("apart");
-      } else {
-        if (el.dataset.state === "apart") { set("walking"); await wait(2300); }
-        set("together");
-        if (act === "hug" || act === "kiss") {
-          set(act);
-          const r = el.getBoundingClientRect();
-          burst(r.left + r.width / 2, r.top + r.height / 2, 14);
-        }
-        for (const [who, text] of lines) await say(who, text);
-        if (act === "kiss") { await wait(1500); set("together"); }
+        set("back"); arriveAt = 0;
+        await wait(2300);
+        if (live()) set("apart");
+        return;
       }
-      busy = false;
+      const s = el.dataset.state;
+      if (s === "apart" || s === "back") { set("walking"); arriveAt = performance.now() + 2300; }
+      const left = arriveAt - performance.now();
+      if (left > 0) { await wait(left); if (!live()) return; }
+      set(act === "hug" || act === "kiss" ? act : "together");
+      if (act !== "walk") {
+        const r = el.getBoundingClientRect();
+        burst(r.left + r.width / 2, r.top + r.height / 2, 14);
+        navigator.vibrate?.(act === "kiss" ? [10, 60, 10] : 12);
+      }
+      for (const [who, text] of lines) {
+        const b = $(`.char.${who} .bubble`, el);
+        b.textContent = text;
+        b.classList.add("show");
+        await wait(1800);
+        if (!live()) return;
+        b.classList.remove("show");
+        await wait(200);
+        if (!live()) return;
+      }
+      if (act === "kiss") { await wait(1500); if (live()) set("together"); }
     };
   }
   const stages = { start: makeStage($("#stage-start")), end: makeStage($("#stage-end")) };
@@ -216,6 +224,22 @@
   $(".wrap-nav.next").onclick = () => show(cur + 1);
   $(".wrap-nav.prev").onclick = () => show(cur - 1);
   show(0);
+  // swipe: a quick flick counts even when it is short, so use speed as well as distance
+  const wrap = $("#wrap");
+  let sx = null, st = 0, swiped = false;
+  wrap.addEventListener("pointerdown", (e) => { sx = e.clientX; st = e.timeStamp; swiped = false; });
+  wrap.addEventListener("pointerup", (e) => {
+    if (sx === null) return;
+    const dx = e.clientX - sx, v = Math.abs(dx) / (e.timeStamp - st || 1);
+    sx = null;
+    if (Math.abs(dx) > 40 || (Math.abs(dx) > 12 && v > 0.3)) { swiped = true; show(cur + (dx < 0 ? 1 : -1)); }
+  });
+  wrap.addEventListener("pointercancel", () => (sx = null));
+  wrap.addEventListener("click", (e) => { if (swiped) { e.stopPropagation(); swiped = false; } }, true);
+  wrap.addEventListener("keydown", (e) => {
+    if (e.key === "ArrowRight") show(cur + 1);
+    if (e.key === "ArrowLeft") show(cur - 1);
+  });
 
   /* ---------- scroll reveals and auto-played scenes ---------- */
   let observed = false;
