@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Our First Year</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Nunito:wght@400;600;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body class="locked">
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <filter id="wobble"><feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="4"/><feDisplacementMap in="SourceGraphic" scale="2.5"/></filter>
+</svg>
+<div id="sky" aria-hidden="true"></div>
+
+<header id="opening">
+  <h1 id="op-title"></h1>
+  <p id="op-hint" class="hint"></p>
+  <div class="op-row">
+    <div class="op-char bob" id="op-a"></div>
+    <button class="envelope" id="envelope" aria-label="Open the envelope">
+      <span class="env-back"></span>
+      <span class="env-letter"><span id="op-l1"></span><strong id="op-l2"></strong></span>
+      <span class="env-front"></span>
+      <span class="env-flap"></span>
+      <span class="env-seal">&hearts;</span>
+    </button>
+    <div class="op-char bob late" id="op-b"></div>
+  </div>
+  <a href="#start" class="btn" id="op-btn" hidden></a>
+</header>
+
+<main id="main" hidden>
+  <nav class="nav" aria-label="Sections">
+    <a href="#start">The start</a><a href="#days">365 days</a><a href="#relive">Relive</a><a href="#wrapped">Wrapped</a><a href="#letter">Letter</a>
+  </nav>
+
+  <section id="start">
+    <h2>How it all started</h2>
+    <div class="stage" id="stage-start"></div>
+    <div class="stage-btns" data-stage="start">
+      <button data-act="walk">Walk</button><button data-act="hug">Hug</button><button data-act="kiss">Kiss</button><button data-act="reset">Again</button>
+    </div>
+    <div class="story" id="story"></div>
+    <blockquote class="note" id="beginning"></blockquote>
+  </section>
+
+  <section id="days">
+    <h2>Our 365 days together</h2>
+    <div class="timeline" id="timeline"></div>
+  </section>
+
+  <section id="relive">
+    <h2>If I could relive it all</h2>
+    <div id="memories"></div>
+  </section>
+
+  <section id="wrapped">
+    <h2>Our relationship, wrapped</h2>
+    <div class="wrap" id="wrap">
+      <div class="wrap-bars" id="wrap-bars"></div>
+      <div class="wrap-slides" id="wrap-slides"></div>
+      <button class="wrap-nav prev" aria-label="Previous"></button>
+      <button class="wrap-nav next" aria-label="Next"></button>
+    </div>
+    <p class="hint">tap the card to go on</p>
+  </section>
+
+  <section id="letter">
+    <h2>A letter for you</h2>
+    <article class="paper" id="paper"></article>
+    <p class="final" id="final"></p>
+    <div class="stage" id="stage-end"></div>
+    <div class="stage-btns" data-stage="end">
+      <button data-act="hug">Hug</button><button data-act="kiss">Kiss</button>
+    </div>
+  </section>
+  <footer>made with love, for you</footer>
+</main>
+
+<script src="content.js"></script>
+<script src="script.js"></script>
+</body>
+</html>
