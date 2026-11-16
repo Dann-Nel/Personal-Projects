@@ -1,0 +1,4 @@
+fly.toml
+Dockerfile
+README.md
+.dockerignore
