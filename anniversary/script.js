@@ -237,7 +237,11 @@
       ph.innerHTML = `<svg class="doodle" viewBox="0 0 60 60">${ICONS.camera}</svg><span>add ${esc(el.dataset.src)}</span>`;
       el.replaceWith(ph);
     };
-    if (el.tagName === "IMG" && el.complete && !el.naturalWidth) swap(); else el.addEventListener("error", swap, { once: true });
+    if (el.tagName === "IMG" && el.complete && !el.naturalWidth) return swap();
+    el.addEventListener("error", swap, { once: true });
+    if (el.tagName === "IMG") {
+      if (el.complete) el.classList.add("loaded"); else el.addEventListener("load", () => el.classList.add("loaded"), { once: true });
+    }
   });
   document.querySelectorAll(".media").forEach((box) => {
     const track = $(".media-track", box), dots = box.querySelectorAll(".dots i");
@@ -264,6 +268,9 @@
     L.parts.map((p) => `<h3>${esc(p.heading)}</h3><p>${esc(p.text)}</p>`).join("") +
     `<p class="sign">${esc(L.signOff)}<br>${esc(C.yourName)}</p>`;
   $("#final").textContent = L.finalMessage;
+
+  document.querySelectorAll("h2").forEach((h) => h.insertAdjacentHTML("beforeend",
+    `<svg class="squiggle" viewBox="0 0 120 10" aria-hidden="true"><path pathLength="1" d="M2 6 q14 -8 28 0 t28 0 t28 0 t28 0"/></svg>`));
 
   /* ---------- wrapped ---------- */
   const start = new Date(C.startDate + "T00:00");
@@ -293,7 +300,9 @@
   $("#wrap-bars").innerHTML = slides.map(() => "<i></i>").join("");
   const slideEls = [...document.querySelectorAll(".slide")], bars = [...document.querySelectorAll("#wrap-bars i")];
   let cur = -1;
-  function show(i) {
+  function show(i, dir = 1) {
+    // dir: 1 going forward, -1 going back, so the words arrive from the side you are heading to
+    $("#wrap-slides").style.setProperty("--d", dir);
     cur = (i + slides.length) % slides.length;
     slideEls.forEach((s, n) => s.classList.toggle("on", n === cur));
     bars.forEach((b, n) => b.classList.toggle("on", n <= cur));
@@ -309,7 +318,7 @@
     });
   }
   $(".wrap-nav.next").onclick = () => show(cur + 1);
-  $(".wrap-nav.prev").onclick = () => show(cur - 1);
+  $(".wrap-nav.prev").onclick = () => show(cur - 1, -1);
   show(0);
   // swipe: a quick flick counts even when it is short, so use speed as well as distance
   const wrap = $("#wrap");
@@ -319,13 +328,13 @@
     if (sx === null) return;
     const dx = e.clientX - sx, v = Math.abs(dx) / (e.timeStamp - st || 1);
     sx = null;
-    if (Math.abs(dx) > 40 || (Math.abs(dx) > 12 && v > 0.3)) { swiped = true; show(cur + (dx < 0 ? 1 : -1)); }
+    if (Math.abs(dx) > 40 || (Math.abs(dx) > 12 && v > 0.3)) { swiped = true; show(cur + (dx < 0 ? 1 : -1), dx < 0 ? 1 : -1); }
   });
   wrap.addEventListener("pointercancel", () => (sx = null));
   wrap.addEventListener("click", (e) => { if (swiped) { e.stopPropagation(); swiped = false; } }, true);
   wrap.addEventListener("keydown", (e) => {
     if (e.key === "ArrowRight") show(cur + 1);
-    if (e.key === "ArrowLeft") show(cur - 1);
+    if (e.key === "ArrowLeft") show(cur - 1, -1);
   });
 
   /* ---------- scroll reveals and auto-played scenes ---------- */
@@ -339,8 +348,14 @@
       if (e.target.id === "stage-start") stages.start("walk", lines.start);
       else if (e.target.id === "stage-end") stages.end("hug", lines.end);
       else if (e.target.id === "wrap") show(0);
-      else e.target.classList.add("in");
+      else {
+        e.target.classList.add("in");
+        if (e.target.id === "final" && !calm) {
+          const r = e.target.getBoundingClientRect();
+          burst(r.left + r.width / 2, r.top + r.height / 2, 18);
+        }
+      }
     }), { threshold: 0.25 });
-    document.querySelectorAll(".reveal, .stage, #wrap").forEach((el) => io.observe(el));
+    document.querySelectorAll(".reveal, .stage, #wrap, h2, #final").forEach((el) => io.observe(el));
   }
 })();
