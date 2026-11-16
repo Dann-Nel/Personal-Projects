@@ -276,18 +276,18 @@
   const qa = (label, key, ic, bg) => ({ bg, html: `${icon(ic)}<p class="s-label">${label}</p><p class="s-big">${esc(W[key].answer)}</p><p class="s-note">${esc(W[key].note)}</p>` });
   const G = (a, b) => `linear-gradient(160deg, ${a}, ${b})`;
   const slides = [
-    { bg: G("#e5486d", "#7b2cbf"), html: `${icon("heart")}<p class="s-label">${esc(C.yourName)} + ${esc(C.partnerName)}</p><p class="s-big">Our year, wrapped</p><p class="s-note">a lot happened. let's look back.</p>` },
-    { bg: G("#1db954", "#0b6e4f"), html: `<p class="s-label">Total days together</p><p class="s-num" data-count="${days}">0</p><p class="s-note">every single one since ${esc(since)}</p>` },
-    { bg: G("#ff7b00", "#e5486d"), html: `<p class="s-label">That is</p><p class="s-num" data-count="${months}">0</p><p class="s-big">months of us</p><p class="s-note">and about ${(days * 24).toLocaleString()} hours of being yours</p>` },
+    { bg: G("#c22f55", "#7b2cbf"), html: `${icon("heart")}<p class="s-label">${esc(C.yourName)} + ${esc(C.partnerName)}</p><p class="s-big">Our year, wrapped</p><p class="s-note">a lot happened. let's look back.</p>` },
+    { bg: G("#0f7a37", "#0b6e4f"), html: `<p class="s-label">Total days together</p><p class="s-num" data-count="${days}">0</p><p class="s-note">every single one since ${esc(since)}</p>` },
+    { bg: G("#b85300", "#c22f55"), html: `<p class="s-label">That is</p><p class="s-num" data-count="${months}">0</p><p class="s-big">months of us</p><p class="s-note">and about ${(days * 24).toLocaleString()} hours of being yours</p>` },
     qa("Favourite date", "favouriteDate", "cup", G("#7b2cbf", "#3a0ca3")),
-    qa("Funniest memory", "funniestMemory", "sun", G("#f9a620", "#e5486d")),
-    qa("Most-used nickname", "nickname", "chat", G("#0096c7", "#3a0ca3")),
-    qa("Our song", "song", "star", G("#1db954", "#0077b6")),
-    qa("Most memorable conversation", "conversation", "moon", G("#3a0ca3", "#e5486d")),
-    qa("Best adventure", "adventure", "camera", G("#0b6e4f", "#f9a620")),
-    qa("Biggest achievement as a couple", "achievement", "flower", G("#e5486d", "#ff7b00")),
-    qa("Most unforgettable moment", "unforgettable", "heart", G("#7b2cbf", "#e5486d")),
-    { bg: G("#e5486d", "#3a0ca3"), html: `${icon("heart")}<p class="s-label">Top genre</p><p class="s-big">Us.</p><p class="s-note">here's to year two, ${esc(C.partnerName)}</p>` },
+    qa("Funniest memory", "funniestMemory", "sun", G("#a86400", "#c22f55")),
+    qa("Most-used nickname", "nickname", "chat", G("#0077a0", "#3a0ca3")),
+    qa("Our song", "song", "star", G("#0f7a37", "#0077b6")),
+    qa("Most memorable conversation", "conversation", "moon", G("#3a0ca3", "#c22f55")),
+    qa("Best adventure", "adventure", "camera", G("#0b6e4f", "#a86400")),
+    qa("Biggest achievement as a couple", "achievement", "flower", G("#c22f55", "#b85300")),
+    qa("Most unforgettable moment", "unforgettable", "heart", G("#7b2cbf", "#c22f55")),
+    { bg: G("#c22f55", "#3a0ca3"), html: `${icon("heart")}<p class="s-label">Top genre</p><p class="s-big">Us.</p><p class="s-note">here's to year two, ${esc(C.partnerName)}</p>` },
   ];
   $("#wrap-slides").innerHTML = slides.map((s) => `<div class="slide" style="--bg:${s.bg}">${s.html}</div>`).join("");
   $("#wrap-bars").innerHTML = slides.map(() => "<i></i>").join("");
