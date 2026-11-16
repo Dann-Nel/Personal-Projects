@@ -209,11 +209,11 @@
       : "";
     return `<div class="media"><div class="media-track">${items}</div>${extras}</div>`;
   }
-  const SHADOWS = ["var(--pink)", "var(--sky)", "var(--butter)", "var(--mint)", "var(--lilac)"];
+  const SHADOWS = ["var(--pink)", "var(--butter)"]; // the two main colours; blue, mint and lilac stay as small accents
   const tilt = (i) => `--tilt:${[-1.5, 1.2, -0.8, 1.6][i % 4]}deg`;
 
   $("#story").innerHTML = C.story.map((s, i) =>
-    `<button class="card chapter reveal" data-chapter="${i}" style="--c:${SHADOWS[i % 5]};${tilt(i)}">${icon(s.doodle)}
+    `<button class="card chapter reveal" data-chapter="${i}" style="--c:${SHADOWS[i % 2]};${tilt(i)}">${icon(s.doodle)}
       <span class="num">chapter ${i + 1}</span><h3>${esc(s.title)}</h3><p>${esc(s.text)}</p>
       <span class="more">tap to read \u2192</span></button>`).join("");
   $("#beginning").textContent = C.beginningMessage;
@@ -277,7 +277,7 @@
       <h3>${esc(s.title)}</h3>${s.media || s.photo ? `<figure class="polaroid">${media(s, s.title)}</figure>` : ""}<p>${esc(s.text)}</p>`;
     wireMedia(dlgBody);
     dlgBody.scrollTop = 0;
-    dlg.style.setProperty("--c", SHADOWS[chapter % 5]);
+    dlg.style.setProperty("--c", SHADOWS[chapter % 2]);
     if (!dlg.open) { dlg.showModal(); document.body.classList.add("locked"); }
   }
   $("#story").addEventListener("click", (e) => {
@@ -318,20 +318,19 @@
   const W = C.wrapped;
   const since = start.toLocaleDateString(undefined, { day: "numeric", month: "long", year: "numeric" });
   const qa = (label, key, ic, bg) => ({ bg, html: `${icon(ic)}<p class="s-label">${label}</p><p class="s-big">${esc(W[key].answer)}</p><p class="s-note">${esc(W[key].note)}</p>` });
-  const G = (a, b) => `linear-gradient(160deg, ${a}, ${b})`;
   const slides = [
-    { bg: G("#c22f55", "#7b2cbf"), html: `${icon("heart")}<p class="s-label">${esc(C.yourName)} + ${esc(C.partnerName)}</p><p class="s-big">Our year, wrapped</p><p class="s-note">a lot happened. let's look back.</p>` },
-    { bg: G("#0f7a37", "#0b6e4f"), html: `<p class="s-label">Total days together</p><p class="s-num" data-count="${days}">0</p><p class="s-note">every single one since ${esc(since)}</p>` },
-    { bg: G("#b85300", "#c22f55"), html: `<p class="s-label">That is</p><p class="s-num" data-count="${months}">0</p><p class="s-big">months of us</p><p class="s-note">and about ${(days * 24).toLocaleString()} hours of being yours</p>` },
-    qa("Favourite date", "favouriteDate", "cup", G("#7b2cbf", "#3a0ca3")),
-    qa("Funniest memory", "funniestMemory", "sun", G("#a86400", "#c22f55")),
-    qa("Most-used nickname", "nickname", "chat", G("#0077a0", "#3a0ca3")),
-    qa("Our song", "song", "star", G("#0f7a37", "#0077b6")),
-    qa("Most memorable conversation", "conversation", "moon", G("#3a0ca3", "#c22f55")),
-    qa("Best adventure", "adventure", "camera", G("#0b6e4f", "#a86400")),
-    qa("Biggest achievement as a couple", "achievement", "flower", G("#c22f55", "#b85300")),
-    qa("Most unforgettable moment", "unforgettable", "heart", G("#7b2cbf", "#c22f55")),
-    { bg: G("#c22f55", "#3a0ca3"), html: `${icon("heart")}<p class="s-label">Top genre</p><p class="s-big">Us.</p><p class="s-note">here's to year two, ${esc(C.partnerName)}</p>` },
+    { bg: "#ff9db5", html: `${icon("heart")}<p class="s-label">${esc(C.yourName)} + ${esc(C.partnerName)}</p><p class="s-big">Our year, wrapped</p><p class="s-note">a lot happened. let's look back.</p>` },
+    { bg: "#ffe29a", html: `<p class="s-label">Total days together</p><p class="s-num" data-count="${days}">0</p><p class="s-note">every single one since ${esc(since)}</p>` },
+    { bg: "#ffd0dc", html: `<p class="s-label">That is</p><p class="s-num" data-count="${months}">0</p><p class="s-big">months of us</p><p class="s-note">and about ${(days * 24).toLocaleString()} hours of being yours</p>` },
+    qa("Favourite date", "favouriteDate", "cup", "#ffe29a"),
+    qa("Funniest memory", "funniestMemory", "sun", "#ffd0dc"),
+    qa("Most-used nickname", "nickname", "chat", "#ffe29a"),
+    qa("Our song", "song", "star", "#ffd0dc"),
+    qa("Most memorable conversation", "conversation", "moon", "#ffe29a"),
+    qa("Best adventure", "adventure", "camera", "#ffd0dc"),
+    qa("Biggest achievement as a couple", "achievement", "flower", "#ffe29a"),
+    qa("Most unforgettable moment", "unforgettable", "heart", "#ffd0dc"),
+    { bg: "#ff9db5", html: `${icon("heart")}<p class="s-label">Top genre</p><p class="s-big">Us.</p><p class="s-note">here's to year two, ${esc(C.partnerName)}</p>` },
   ];
   $("#wrap-slides").innerHTML = slides.map((s) => `<div class="slide" style="--bg:${s.bg}">${s.html}</div>`).join("");
   $("#wrap-bars").innerHTML = slides.map(() => "<i></i>").join("");
