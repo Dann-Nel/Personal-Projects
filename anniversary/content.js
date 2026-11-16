@@ -12,10 +12,17 @@ window.CONTENT = {
   partnerName: "My Love",
   startDate: "2025-12-01", // the day you became a couple, as YEAR-MONTH-DAY. CHANGE THIS to your real date.
 
-  // Doodle character colours. "a" is you, "b" is him.
+  // The two doodle characters. "a" is you, "b" is him. Make them look like the two of you:
+  //   color:     body colour
+  //   hair:      "long", "short", "curly", "bun", "tuft" or "none"
+  //   hairColor: any colour, for example "#6b4a3a" brown, "#2b2b2b" black, "#e8c36a" blonde, "#b5532a" ginger
+  //   glasses:   true or false
+  //   bow:       true or false (a little bow on the head)
+  //   sprout:    true or false (a little heart growing from the head)
+  //   height:    1 is normal, 1.1 is a bit taller, 0.92 a bit shorter
   characters: {
-    a: { color: "#ffc2d1" },
-    b: { color: "#bde0fe" },
+    a: { color: "#ffc2d1", hair: "long", hairColor: "#6b4a3a", glasses: false, bow: true, sprout: false, height: 1 },
+    b: { color: "#bde0fe", hair: "short", hairColor: "#3a2e39", glasses: false, bow: false, sprout: false, height: 1.1 },
   },
 
   // Background song. It starts when the envelope is opened and pauses while a video plays.
@@ -48,6 +55,17 @@ window.CONTENT = {
   ],
   beginningMessage: "A special message about your beginning goes here. Tell him what that start means to you now.",
   storyBubbles: [["a", "hi."], ["b", "hi :)"], ["a", "so... coffee?"], ["b", "thought you'd never ask"]],
+
+  // ---------- Big lines between sections ----------
+  // One for each gap, in order: after the story, after the timeline, after the memories, after wrapped.
+  // Each can also show photos and videos: add  media: ["photos/a.jpg", "photos/b.mp4"]  and an optional caption.
+  // Use { quote: "" } to leave a gap empty.
+  interludes: [
+    { quote: "And that was only the beginning." },
+    { quote: "365 days, and I would not trade a single one." },
+    { quote: "Now for the numbers." },
+    { quote: "One more thing, in my own words." },
+  ],
 
   // ---------- Our 365 days together ----------
   timeline: [

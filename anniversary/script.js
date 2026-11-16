@@ -7,22 +7,38 @@
   const calm = matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   /* ---------- doodles ---------- */
+  // each character is drawn from its settings in content.js: colour, hair, glasses, bow, height
+  const HAIR = {
+    long: (c) => [`<path fill="${c}" d="M22 62 C12 20 40 2 60 2 C80 2 108 20 98 62 L104 106 C96 112 87 109 86 100 L85 52 H35 L34 100 C33 109 24 112 16 106Z"/>`,
+      `<path fill="${c}" d="M27 46 C26 12 94 12 93 46 C80 36 68 36 60 29 C52 36 40 36 27 46Z"/>`],
+    short: (c) => ["", `<path fill="${c}" d="M25 46 C22 10 98 10 95 46 C86 31 72 27 60 29 C46 26 35 33 25 46Z"/>`],
+    curly: (c) => ["", `<g fill="${c}">${[[30, 34], [42, 22], [56, 16], [70, 17], [83, 25], [92, 38]].map(([x, y]) => `<circle cx="${x}" cy="${y}" r="11"/>`).join("")}</g>`],
+    bun: (c) => [`<circle fill="${c}" cx="60" cy="6" r="12"/>`, `<path fill="${c}" d="M25 46 C22 10 98 10 95 46 C86 31 72 27 60 29 C46 26 35 33 25 46Z"/>`],
+    tuft: () => ["", `<path class="nofill" d="M50 20 q-2 -10 6 -13 M60 18 q0 -11 8 -12 M69 20 q3 -8 10 -7"/>`],
+    none: () => ["", ""],
+  };
   function charSVG(who) {
-    const fill = C.characters[who].color;
-    const topper = who === "a"
-      ? `<path class="nofill" d="M60 18 q-3 -6 0 -11"/><path fill="#e5486d" d="M60 9 c-9 -6 -7 -13 -3 -13 c2 0 3 2 3 2 c0 0 1 -2 3 -2 c4 0 6 7 -3 13z"/>`
-      : `<path class="nofill" d="M50 20 q-2 -10 6 -13 M60 18 q0 -11 8 -12 M69 20 q3 -8 10 -7"/>`;
-    return `<svg class="doodle" viewBox="0 -8 120 156" aria-hidden="true">
+    const c = C.characters[who];
+    const [back, front] = (HAIR[c.hair] || HAIR.none)(c.hairColor || "#3a2e39");
+    const h = c.height || 1;
+    const extras = [
+      c.sprout ? `<path class="nofill" d="M60 18 q-3 -6 0 -11"/><path fill="#e5486d" d="M60 9 c-9 -6 -7 -13 -3 -13 c2 0 3 2 3 2 c0 0 1 -2 3 -2 c4 0 6 7 -3 13z"/>` : "",
+      c.bow ? `<path fill="#e5486d" d="M80 22 l-13 -8 v16z M80 22 l13 -8 v16z"/><circle fill="#e5486d" cx="80" cy="22" r="4"/>` : "",
+      c.glasses ? `<g class="nofill"><circle cx="46" cy="62" r="10"/><circle cx="74" cy="62" r="10"/><path d="M56 62 h8 M36 60 l-9 -3 M84 60 l9 -3"/></g>` : "",
+    ].join("");
+    return `<svg class="doodle" viewBox="0 -8 120 156" aria-hidden="true"><g transform="translate(60 138) scale(${h}) translate(-60 -138)">
       <g class="leg l"><path class="nofill" d="M48 118 v20 h-8"/></g>
       <g class="leg r"><path class="nofill" d="M72 118 v20 h8"/></g>
+      ${back}
       <path class="arm l nofill" d="M24 78 q-14 8 -12 22"/>
       <path class="arm r nofill" d="M96 78 q14 8 12 22"/>
-      <path fill="${fill}" d="M60 18 C92 18 102 50 100 82 C98 112 84 124 60 124 C36 124 22 112 20 82 C18 50 28 18 60 18Z"/>
-      ${topper}
+      <path fill="${c.color}" d="M60 18 C92 18 102 50 100 82 C98 112 84 124 60 124 C36 124 22 112 20 82 C18 50 28 18 60 18Z"/>
+      ${front}
       <circle class="eye ink" cx="46" cy="62" r="4"/><circle class="eye ink" cx="74" cy="62" r="4"/>
-      <ellipse class="blush" cx="35" cy="75" rx="7" ry="4.5"/><ellipse class="blush" cx="85" cy="75" rx="7" ry="4.5"/>
-      <path class="nofill" d="M52 76 q8 8 16 0"/>
-    </svg>`;
+      <ellipse class="blush" cx="35" cy="76" rx="7" ry="4.5"/><ellipse class="blush" cx="85" cy="76" rx="7" ry="4.5"/>
+      <path class="nofill" d="M52 77 q8 8 16 0"/>
+      ${extras}
+    </g></svg>`;
   }
   const ICONS = {
     heart: `<path fill="#ff8fab" d="M30 50 C8 34 10 14 22 14 C28 14 30 20 30 20 C30 20 32 14 38 14 C50 14 52 34 30 50Z"/>`,
@@ -230,6 +246,17 @@
         <dt>Why I would relive it</dt><dd>${esc(m.relive)}</dd></dl></div>
     </div>`).join("");
 
+  // breathers: a big handwritten line between sections, with the two of them walking past
+  ["start", "days", "relive", "wrapped"].forEach((id, i) => {
+    const it = (C.interludes || [])[i];
+    if (!it || !(it.quote || it.media)) return;
+    $("#" + id).insertAdjacentHTML("afterend", `<div class="breather">
+      ${it.quote ? `<blockquote class="reveal">${esc(it.quote)}</blockquote>` : ""}
+      ${it.media && it.media.length ? `<figure class="polaroid reveal">${media(it, it.quote || "A moment of ours")}${it.caption ? `<figcaption>${esc(it.caption)}</figcaption>` : ""}</figure>` : ""}
+      <div class="walk-strip" aria-hidden="true"><div class="walkers"><span>${charSVG("a")}</span><i>\u2665</i><span>${charSVG("b")}</span></div></div>
+    </div>`);
+  });
+
   // a missing photo or video becomes a doodle placeholder that names the file to add
   function wireMedia(root) {
   root.querySelectorAll("[data-src]").forEach((el) => {
@@ -393,5 +420,8 @@
       }
     }), { threshold: 0.25 });
     document.querySelectorAll(".reveal, .stage, #wrap, h2, #final").forEach((el) => io.observe(el));
+    // the walkers only move while their strip is on screen
+    const walkIO = new IntersectionObserver((es) => es.forEach((e) => e.target.classList.toggle("go", e.isIntersecting)));
+    document.querySelectorAll(".walk-strip").forEach((el) => walkIO.observe(el));
   }
 })();
