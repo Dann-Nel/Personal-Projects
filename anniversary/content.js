@@ -22,7 +22,7 @@ window.CONTENT = {
   // file: a song file you put in this folder, for example "music/song.mp3". Leave "" to use YouTube.
   // youtubeId: the part after "v=" in a YouTube link. Used when there is no file.
   // volume: 0 to 100.
-  music: { file: "", youtubeId: "DB7jsjt4Uec", volume: 60 },
+  music: { file: "music/postcards.mp3", youtubeId: "DB7jsjt4Uec", volume: 60 },
 
   opening: {
     title: "Happy 1 Year",
