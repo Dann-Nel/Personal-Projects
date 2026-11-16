@@ -64,6 +64,60 @@
   }
   addEventListener("pointerdown", (e) => burst(e.clientX, e.clientY, 5));
 
+  /* ---------- background song ---------- */
+  // wanted: the listener has not switched it off. held: a video on the page is playing.
+  const music = { ready: false, wanted: false, held: false, timer: 0, play() {}, pause() {} };
+  const musicBtn = $("#music");
+  function syncMusic() {
+    const on = music.wanted && !music.held;
+    musicBtn.classList.toggle("off", !music.wanted);
+    musicBtn.classList.toggle("playing", on);
+    musicBtn.setAttribute("aria-label", music.wanted ? "Pause the song" : "Play the song");
+    if (!music.ready) return;
+    if (on) music.play(); else music.pause();
+  }
+  const hasMusic = !!(C.music && (C.music.file || C.music.youtubeId));
+  if (hasMusic) {
+    const volume = C.music.volume ?? 60;
+    const useYouTube = () => {
+      if (!C.music.youtubeId) { musicBtn.hidden = true; return; }
+      window.onYouTubeIframeAPIReady = () => {
+        const yt = new YT.Player("yt", {
+          width: 200, height: 200, videoId: C.music.youtubeId,
+          playerVars: { playsinline: 1, controls: 0, disablekb: 1, loop: 1, playlist: C.music.youtubeId },
+          events: {
+            onReady: () => {
+              yt.setVolume(volume);
+              Object.assign(music, { ready: true, play: () => yt.playVideo(), pause: () => yt.pauseVideo() });
+              syncMusic();
+            },
+            onStateChange: (e) => { if (e.data === 0) { yt.seekTo(0); syncMusic(); } },
+            // YouTube refuses to play some songs outside youtube.com; without a song there is nothing to control
+            onError: () => { music.ready = false; musicBtn.hidden = true; },
+          },
+        });
+      };
+      document.head.append(Object.assign(document.createElement("script"), { src: "https://www.youtube.com/iframe_api" }));
+    };
+    if (C.music.file) {
+      // a song file in the site folder is the most reliable option; YouTube is the fallback
+      const audio = new Audio(C.music.file);
+      audio.loop = true;
+      audio.volume = volume / 100;
+      audio.addEventListener("error", () => { music.ready = false; useYouTube(); }, { once: true });
+      Object.assign(music, { ready: true, play: () => audio.play().catch(() => {}), pause: () => audio.pause() });
+    } else useYouTube();
+    musicBtn.onclick = () => { music.wanted = !music.wanted; syncMusic(); };
+    // the song steps aside for any video on the page and comes back when it stops
+    const videoChange = () => {
+      clearTimeout(music.timer);
+      const playing = [...document.querySelectorAll("video")].some((v) => !v.paused && !v.ended);
+      if (playing) { music.held = true; syncMusic(); }
+      else music.timer = setTimeout(() => { music.held = false; syncMusic(); }, 350);
+    };
+    for (const ev of ["play", "pause", "ended"]) document.addEventListener(ev, videoChange, true);
+  }
+
   /* ---------- opening ---------- */
   const O = C.opening;
   $("#op-title").textContent = O.title;
@@ -81,6 +135,7 @@
     burst(r.left + r.width / 2, r.top + r.height / 3, 24);
     navigator.vibrate?.(15);
     $("#op-hint").style.visibility = "hidden";
+    if (hasMusic) { music.wanted = true; musicBtn.hidden = false; syncMusic(); }
     $("#main").hidden = false;
     $("#op-btn").hidden = false;
     document.body.classList.remove("locked");

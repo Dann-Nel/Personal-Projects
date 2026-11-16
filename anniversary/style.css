@@ -244,3 +244,16 @@ footer { text-align: center; font: 1.3rem var(--hand); opacity: .6; padding: 1re
 @media (max-width: 480px) { .nav { gap: 0; padding: 3px 4px; flex-wrap: nowrap; } .nav a { font-size: 1.05rem; padding: 0 .38rem; } }
 .wrap-nav:focus-visible { outline: none; }
 .wrap:has(.wrap-nav:focus-visible) { outline: 3px solid var(--rose); outline-offset: 4px; }
+
+/* background song */
+#yt-holder { position: fixed; left: -400px; top: 0; width: 200px; height: 200px; pointer-events: none; opacity: 0; }
+.music { position: fixed; right: 14px; bottom: 14px; z-index: 30; width: 46px; height: 46px; border-radius: 50%; border: 3px solid var(--ink);
+  background: var(--butter); color: var(--ink); font: 700 1.4rem/1 var(--body); box-shadow: 3px 3px 0 var(--ink); cursor: pointer;
+  transition: translate .12s var(--ease-out), box-shadow .12s var(--ease-out), background-color .2s ease; }
+.music[hidden] { display: none; }
+.music:active { translate: 2px 2px; box-shadow: 1px 1px 0 var(--ink); }
+.music span { display: block; }
+.music.playing span { animation: bob 1.2s ease-in-out infinite; }
+.music.off { background: #fff; }
+.music.off::after { content: ""; position: absolute; left: 8px; right: 8px; top: 50%; border-top: 3px solid var(--rose); rotate: -45deg; }
+@media (prefers-reduced-motion: reduce) { .music.playing span { animation: none; } }

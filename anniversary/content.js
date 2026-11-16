@@ -18,6 +18,12 @@ window.CONTENT = {
     b: { color: "#bde0fe" },
   },
 
+  // Background song. It starts when the envelope is opened and pauses while a video plays.
+  // file: a song file you put in this folder, for example "music/song.mp3". Leave "" to use YouTube.
+  // youtubeId: the part after "v=" in a YouTube link. Used when there is no file.
+  // volume: 0 to 100.
+  music: { file: "", youtubeId: "DB7jsjt4Uec", volume: 60 },
+
   opening: {
     title: "Happy 1 Year",
     hint: "tap the envelope",

@@ -12,3 +12,10 @@ A one-year anniversary website. Open `index.html` in a browser to view it.
 3. Add or remove timeline entries, memories and story chapters by copying or deleting a `{ ... }` block.
 
 Total days and months in the "wrapped" section are counted from `startDate`.
+
+## Background song
+
+The song starts when the envelope is opened, pauses while any video plays and resumes afterwards.
+The round button in the corner switches it off and on. Set it in `content.js` under `music`:
+put a song file in the `music` folder and set `file: "music/song.mp3"`, or leave `file` empty to use `youtubeId`.
+Some songs cannot be played from YouTube on other websites; a file always works.
