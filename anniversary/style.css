@@ -144,7 +144,21 @@ section { max-width: 980px; margin: 0 auto; padding: 5rem 16px 3rem; position: r
 
 /* polaroids + timeline */
 .polaroid { background: #fff; border: 3px solid var(--ink); padding: 10px 10px 4px; box-shadow: 6px 6px 0 #0002; margin: 0; }
-.polaroid img, .polaroid .ph { display: block; width: 100%; aspect-ratio: 1; object-fit: cover; background: #f6e9e0; border: 2px solid var(--ink); }
+.media { position: relative; }
+.media-track { display: flex; aspect-ratio: 1; overflow-x: auto; overflow-y: hidden; scroll-snap-type: x mandatory; scrollbar-width: none;
+  overscroll-behavior-x: contain; background: #f6e9e0; border: 2px solid var(--ink); }
+.media-track::-webkit-scrollbar { display: none; }
+.media-track > * { flex: 0 0 100%; width: 100%; height: 100%; object-fit: cover; scroll-snap-align: start; scroll-snap-stop: always; display: block; }
+.media-track video { background: #000; object-fit: contain; }
+.media-count { position: absolute; top: 8px; right: 8px; padding: 0 .5rem; border-radius: 999px; background: #3a2e39cc; color: #fff; font: 600 .75rem/1.6 var(--body); }
+.media-arrow { position: absolute; top: 50%; translate: 0 -50%; width: 30px; height: 30px; padding: 0 0 3px; border-radius: 50%; border: 2px solid var(--ink);
+  background: #fffd; color: var(--ink); font: 700 1.2rem/1 var(--body); cursor: pointer; transition: scale .12s var(--ease-out); }
+.media-arrow:active { scale: .92; }
+.media-arrow.prev { left: 6px; } .media-arrow.next { right: 6px; }
+.media-arrow[hidden] { display: none; }
+.dots { display: flex; gap: 5px; justify-content: center; padding-top: 7px; }
+.dots i { width: 7px; height: 7px; border-radius: 50%; background: #3a2e3933; transition: background-color .2s ease, scale .2s var(--ease-out); }
+.dots i.on { background: var(--rose); scale: 1.25; }
 .ph { display: grid !important; place-items: center; align-content: center; gap: 4px; font: 1.1rem var(--hand); color: #3a2e3999; text-align: center; }
 .ph .doodle { width: 46%; opacity: .55; margin: 0 auto; }
 .polaroid { transition: rotate .3s var(--ease-out), scale .3s var(--ease-out); }

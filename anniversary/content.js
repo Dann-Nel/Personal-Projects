@@ -1,8 +1,11 @@
 /* =====================================================================
    EVERYTHING YOU NEED TO EDIT LIVES IN THIS FILE.
    Replace the text between the quotes. Keep the quotes and commas.
-   Photos: drop image files into the "photos" folder and use the same
-   file names you see below (or change the names here to match yours).
+   Photos and videos: drop the files into the "photos" folder and list
+   them in "media". One frame can hold as many as you like, in the order
+   you want them shown, for example:
+     media: ["photos/beach1.jpg", "photos/beach2.jpg", "photos/beach.mp4"]
+   Videos should be .mp4 so they play on every phone.
    ===================================================================== */
 window.CONTENT = {
   yourName: "Me",
@@ -40,18 +43,18 @@ window.CONTENT = {
 
   // ---------- Our 365 days together ----------
   timeline: [
-    { date: "November 2025", caption: "Where it all began", photo: "photos/01.jpg" },
-    { date: "December 2025", caption: "Our first holidays", photo: "photos/02.jpg" },
-    { date: "January 2026", caption: "New year, same us", photo: "photos/03.jpg" },
-    { date: "February 2026", caption: "Our first Valentine's", photo: "photos/04.jpg" },
-    { date: "March 2026", caption: "Add a caption", photo: "photos/05.jpg" },
-    { date: "April 2026", caption: "Add a caption", photo: "photos/06.jpg" },
-    { date: "May 2026", caption: "Add a caption", photo: "photos/07.jpg" },
-    { date: "June 2026", caption: "Add a caption", photo: "photos/08.jpg" },
-    { date: "July 2026", caption: "Add a caption", photo: "photos/09.jpg" },
-    { date: "August 2026", caption: "Add a caption", photo: "photos/10.jpg" },
-    { date: "September 2026", caption: "Add a caption", photo: "photos/11.jpg" },
-    { date: "October 2026", caption: "Add a caption", photo: "photos/12.jpg" },
+    { date: "November 2025", caption: "Where it all began", media: ["photos/01.jpg", "photos/01b.jpg", "photos/01.mp4"] },
+    { date: "December 2025", caption: "Our first holidays", media: ["photos/02.jpg"] },
+    { date: "January 2026", caption: "New year, same us", media: ["photos/03.jpg"] },
+    { date: "February 2026", caption: "Our first Valentine's", media: ["photos/04.jpg"] },
+    { date: "March 2026", caption: "Add a caption", media: ["photos/05.jpg"] },
+    { date: "April 2026", caption: "Add a caption", media: ["photos/06.jpg"] },
+    { date: "May 2026", caption: "Add a caption", media: ["photos/07.jpg"] },
+    { date: "June 2026", caption: "Add a caption", media: ["photos/08.jpg"] },
+    { date: "July 2026", caption: "Add a caption", media: ["photos/09.jpg"] },
+    { date: "August 2026", caption: "Add a caption", media: ["photos/10.jpg"] },
+    { date: "September 2026", caption: "Add a caption", media: ["photos/11.jpg"] },
+    { date: "October 2026", caption: "Add a caption", media: ["photos/12.jpg"] },
   ],
 
   // ---------- If I could relive it all ----------
@@ -62,7 +65,7 @@ window.CONTENT = {
       what: "What happened that day.",
       special: "Why it was special.",
       relive: "Why you would relive it.",
-      photo: "photos/memory1.jpg",
+      media: ["photos/memory1.jpg"],
       doodle: "star",
     },
     {
@@ -71,7 +74,7 @@ window.CONTENT = {
       what: "What happened that day.",
       special: "Why it was special.",
       relive: "Why you would relive it.",
-      photo: "photos/memory2.jpg",
+      media: ["photos/memory2.jpg"],
       doodle: "sun",
     },
     {
@@ -80,7 +83,7 @@ window.CONTENT = {
       what: "What happened that day.",
       special: "Why it was special.",
       relive: "Why you would relive it.",
-      photo: "photos/memory3.jpg",
+      media: ["photos/memory3.jpg"],
       doodle: "moon",
     },
   ],

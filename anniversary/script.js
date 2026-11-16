@@ -139,8 +139,21 @@
     }));
 
   /* ---------- content ---------- */
-  const photo = (src, alt) =>
-    `<img src="${esc(src)}" alt="${esc(alt)}" loading="lazy" data-src="${esc(src)}">`;
+  // one frame can hold several photos and videos; more than one becomes a swipeable strip
+  const isVideo = (src) => /\.(mp4|webm|m4v|mov|ogv)$/i.test(src);
+  function media(item, alt) {
+    const list = [].concat(item.media || item.photo || []);
+    const n = list.length;
+    const items = list.map((src, i) => isVideo(src)
+      ? `<video src="${esc(src)}" data-src="${esc(src)}" controls playsinline preload="metadata" aria-label="${esc(alt)} (video ${i + 1})"></video>`
+      : `<img src="${esc(src)}" alt="${esc(alt)}" loading="lazy" data-src="${esc(src)}">`).join("");
+    const extras = n > 1
+      ? `<span class="media-count">1/${n}</span>
+         <button class="media-arrow prev" aria-label="Previous" hidden>\u2039</button><button class="media-arrow next" aria-label="Next">\u203a</button>
+         <div class="dots">${list.map((_, i) => `<i class="${i ? "" : "on"}"></i>`).join("")}</div>`
+      : "";
+    return `<div class="media"><div class="media-track">${items}</div>${extras}</div>`;
+  }
   const SHADOWS = ["var(--pink)", "var(--sky)", "var(--butter)", "var(--mint)", "var(--lilac)"];
   const tilt = (i) => `--tilt:${[-1.5, 1.2, -0.8, 1.6][i % 4]}deg`;
 
@@ -151,25 +164,44 @@
 
   $("#timeline").innerHTML = C.timeline.map((t, i) =>
     `<div class="t-item reveal"><span class="t-date">${esc(t.date)}</span>
-      <figure class="polaroid" style="rotate:${[-2, 1.5, -1, 2.5][i % 4]}deg">${photo(t.photo, t.caption)}<figcaption>${esc(t.caption)}</figcaption></figure></div>`).join("");
+      <figure class="polaroid" style="rotate:${[-2, 1.5, -1, 2.5][i % 4]}deg">${media(t, t.caption)}<figcaption>${esc(t.caption)}</figcaption></figure></div>`).join("");
 
   $("#memories").innerHTML = C.relive.map((m, i) =>
     `<div class="memory reveal">
-      <figure class="polaroid" style="rotate:${i % 2 ? 2 : -2}deg">${photo(m.photo, m.title)}<figcaption>${esc(m.date)}</figcaption></figure>
+      <figure class="polaroid" style="rotate:${i % 2 ? 2 : -2}deg">${media(m, m.title)}<figcaption>${esc(m.date)}</figcaption></figure>
       <div class="card">${icon(m.doodle)}<h3>${esc(m.title)}</h3><span class="m-date">${esc(m.date)}</span>
         <dl><dt>What happened</dt><dd>${esc(m.what)}</dd><dt>Why it was special</dt><dd>${esc(m.special)}</dd>
         <dt>Why I would relive it</dt><dd>${esc(m.relive)}</dd></dl></div>
     </div>`).join("");
 
-  // a missing photo becomes a doodle placeholder that names the file to add
-  document.querySelectorAll("img[data-src]").forEach((img) => {
+  // a missing photo or video becomes a doodle placeholder that names the file to add
+  document.querySelectorAll("[data-src]").forEach((el) => {
     const swap = () => {
       const ph = document.createElement("div");
       ph.className = "ph";
-      ph.innerHTML = `<svg class="doodle" viewBox="0 0 60 60">${ICONS.camera}</svg><span>add ${esc(img.dataset.src)}</span>`;
-      img.replaceWith(ph);
+      ph.innerHTML = `<svg class="doodle" viewBox="0 0 60 60">${ICONS.camera}</svg><span>add ${esc(el.dataset.src)}</span>`;
+      el.replaceWith(ph);
     };
-    if (img.complete && !img.naturalWidth) swap(); else img.onerror = swap;
+    if (el.tagName === "IMG" && el.complete && !el.naturalWidth) swap(); else el.addEventListener("error", swap, { once: true });
+  });
+  document.querySelectorAll(".media").forEach((box) => {
+    const track = $(".media-track", box), dots = box.querySelectorAll(".dots i");
+    if (!dots.length) return;
+    const count = $(".media-count", box), prev = $(".prev", box), next = $(".next", box);
+    let idx = 0;
+    const go = (i) => track.scrollTo({ left: i * track.clientWidth, behavior: calm ? "auto" : "smooth" });
+    track.addEventListener("scroll", () => {
+      const i = Math.round(track.scrollLeft / track.clientWidth);
+      if (i === idx) return;
+      idx = i;
+      dots.forEach((d, n) => d.classList.toggle("on", n === i));
+      count.textContent = `${i + 1}/${dots.length}`;
+      prev.hidden = i === 0;
+      next.hidden = i === dots.length - 1;
+      [...track.children].forEach((el, n) => { if (n !== i && el.tagName === "VIDEO") el.pause(); });
+    }, { passive: true });
+    prev.onclick = () => go(idx - 1);
+    next.onclick = () => go(idx + 1);
   });
 
   const L = C.letter;
