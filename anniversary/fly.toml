@@ -1,4 +1,4 @@
-# fly.toml app configuration file generated for our-first-year on 2026-11-16T10:03:09Z
+# fly.toml app configuration file generated for our-first-year on 2026-11-16T10:17:32Z
 #
 # See https://docs.fly.io/reference/configuration for information about how to use this file.
 #
@@ -7,10 +7,11 @@ app = 'our-first-year'
 primary_region = 'jnb'
 
 [build]
+
 [http_service]
   internal_port = 80
   force_https = true
-  auto_stop_machines = 'stop'
+  auto_stop_machines = true
   auto_start_machines = true
   min_machines_running = 0
 
