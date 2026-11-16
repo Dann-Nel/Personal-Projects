@@ -274,7 +274,9 @@
 
   /* ---------- wrapped ---------- */
   const start = new Date(C.startDate + "T00:00");
-  const now = new Date();
+  // before the first anniversary, count as of the anniversary itself so the card reads a full year
+  const anniversary = new Date(start); anniversary.setFullYear(start.getFullYear() + 1);
+  const now = new Date(Math.max(Date.now(), anniversary));
   const days = Math.max(0, Math.floor((now - start) / 864e5));
   let months = (now.getFullYear() - start.getFullYear()) * 12 + now.getMonth() - start.getMonth() - (now.getDate() < start.getDate() ? 1 : 0);
   months = Math.max(0, months);

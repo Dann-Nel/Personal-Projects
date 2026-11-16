@@ -10,7 +10,7 @@
 window.CONTENT = {
   yourName: "Me",
   partnerName: "My Love",
-  startDate: "2025-11-16", // the day you became a couple, as YEAR-MONTH-DAY
+  startDate: "2025-12-01", // the day you became a couple, as YEAR-MONTH-DAY. CHANGE THIS to your real date.
 
   // Doodle character colours. "a" is you, "b" is him.
   characters: {
@@ -49,18 +49,18 @@ window.CONTENT = {
 
   // ---------- Our 365 days together ----------
   timeline: [
-    { date: "November 2025", caption: "Where it all began", media: ["photos/01.jpg", "photos/01b.jpg", "photos/01.mp4"] },
-    { date: "December 2025", caption: "Our first holidays", media: ["photos/02.jpg"] },
-    { date: "January 2026", caption: "New year, same us", media: ["photos/03.jpg"] },
-    { date: "February 2026", caption: "Our first Valentine's", media: ["photos/04.jpg"] },
-    { date: "March 2026", caption: "Add a caption", media: ["photos/05.jpg"] },
-    { date: "April 2026", caption: "Add a caption", media: ["photos/06.jpg"] },
-    { date: "May 2026", caption: "Add a caption", media: ["photos/07.jpg"] },
-    { date: "June 2026", caption: "Add a caption", media: ["photos/08.jpg"] },
-    { date: "July 2026", caption: "Add a caption", media: ["photos/09.jpg"] },
-    { date: "August 2026", caption: "Add a caption", media: ["photos/10.jpg"] },
-    { date: "September 2026", caption: "Add a caption", media: ["photos/11.jpg"] },
-    { date: "October 2026", caption: "Add a caption", media: ["photos/12.jpg"] },
+    { date: "December 2025", caption: "Where it all began", media: ["photos/01.jpg", "photos/01b.jpg", "photos/01.mp4"] },
+    { date: "January 2026", caption: "New year, same us", media: ["photos/02.jpg"] },
+    { date: "February 2026", caption: "Our first Valentine's", media: ["photos/03.jpg"] },
+    { date: "March 2026", caption: "Add a caption", media: ["photos/04.jpg"] },
+    { date: "April 2026", caption: "Add a caption", media: ["photos/05.jpg"] },
+    { date: "May 2026", caption: "Add a caption", media: ["photos/06.jpg"] },
+    { date: "June 2026", caption: "Add a caption", media: ["photos/07.jpg"] },
+    { date: "July 2026", caption: "Add a caption", media: ["photos/08.jpg"] },
+    { date: "August 2026", caption: "Add a caption", media: ["photos/09.jpg"] },
+    { date: "September 2026", caption: "Add a caption", media: ["photos/10.jpg"] },
+    { date: "October 2026", caption: "Add a caption", media: ["photos/11.jpg"] },
+    { date: "November 2026", caption: "Add a caption", media: ["photos/12.jpg"] },
   ],
 
   // ---------- If I could relive it all ----------
@@ -96,6 +96,7 @@ window.CONTENT = {
 
   // ---------- Our relationship wrapped ----------
   // Total days and months are counted automatically from startDate.
+  // Before the anniversary they show the full first year (365 days, 12 months); after it they keep counting.
   wrapped: {
     favouriteDate: { answer: "Your favourite date", note: "A line about why." },
     funniestMemory: { answer: "Your funniest memory", note: "A line about why you still laugh." },
