@@ -34,6 +34,8 @@ window.CONTENT = {
 
   // ---------- How it all started ----------
   // doodle options: heart, star, sun, cup, moon, chat, camera, flower
+  // Each chapter is a card he can tap to open and read in full, so write as much as you like.
+  // A chapter can also show photos and videos when opened: add  media: ["photos/a.jpg", "photos/b.mp4"]
   story: [
     { title: "How we met", doodle: "star", text: "Write how you met here. Where were you? What was the day like?" },
     { title: "Our first conversation", doodle: "chat", text: "What did you talk about? Who spoke first?" },

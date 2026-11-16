@@ -213,8 +213,9 @@
   const tilt = (i) => `--tilt:${[-1.5, 1.2, -0.8, 1.6][i % 4]}deg`;
 
   $("#story").innerHTML = C.story.map((s, i) =>
-    `<div class="card reveal" style="--c:${SHADOWS[i % 5]};${tilt(i)}">${icon(s.doodle)}
-      <span class="num">chapter ${i + 1}</span><h3>${esc(s.title)}</h3><p>${esc(s.text)}</p></div>`).join("");
+    `<button class="card chapter reveal" data-chapter="${i}" style="--c:${SHADOWS[i % 5]};${tilt(i)}">${icon(s.doodle)}
+      <span class="num">chapter ${i + 1}</span><h3>${esc(s.title)}</h3><p>${esc(s.text)}</p>
+      <span class="more">tap to read \u2192</span></button>`).join("");
   $("#beginning").textContent = C.beginningMessage;
 
   $("#timeline").innerHTML = C.timeline.map((t, i) =>
@@ -230,7 +231,8 @@
     </div>`).join("");
 
   // a missing photo or video becomes a doodle placeholder that names the file to add
-  document.querySelectorAll("[data-src]").forEach((el) => {
+  function wireMedia(root) {
+  root.querySelectorAll("[data-src]").forEach((el) => {
     const swap = () => {
       const ph = document.createElement("div");
       ph.className = "ph";
@@ -243,7 +245,7 @@
       if (el.complete) el.classList.add("loaded"); else el.addEventListener("load", () => el.classList.add("loaded"), { once: true });
     }
   });
-  document.querySelectorAll(".media").forEach((box) => {
+  root.querySelectorAll(".media").forEach((box) => {
     const track = $(".media-track", box), dots = box.querySelectorAll(".dots i");
     if (!dots.length) return;
     const count = $(".media-count", box), prev = $(".prev", box), next = $(".next", box);
@@ -261,6 +263,39 @@
     }, { passive: true });
     prev.onclick = () => go(idx - 1);
     next.onclick = () => go(idx + 1);
+  });
+  }
+  wireMedia(document);
+
+  /* ---------- chapter pop-up ---------- */
+  const dlg = $("#chapter"), dlgBody = $("#chapter-body");
+  let chapter = 0;
+  function openChapter(i) {
+    chapter = (i + C.story.length) % C.story.length;
+    const s = C.story[chapter];
+    dlgBody.innerHTML = `${icon(s.doodle)}<span class="num">chapter ${chapter + 1} of ${C.story.length}</span>
+      <h3>${esc(s.title)}</h3>${s.media || s.photo ? `<figure class="polaroid">${media(s, s.title)}</figure>` : ""}<p>${esc(s.text)}</p>`;
+    wireMedia(dlgBody);
+    dlgBody.scrollTop = 0;
+    dlg.style.setProperty("--c", SHADOWS[chapter % 5]);
+    if (!dlg.open) { dlg.showModal(); document.body.classList.add("locked"); }
+  }
+  $("#story").addEventListener("click", (e) => {
+    const card = e.target.closest("[data-chapter]");
+    if (card) openChapter(+card.dataset.chapter);
+  });
+  dlg.addEventListener("click", (e) => {
+    const act = e.target.dataset.go;
+    if (e.target === dlg || act === "close") dlg.close();   // a tap on the dimmed backdrop lands on the dialog itself
+    else if (act) openChapter(chapter + +act);
+  });
+  dlg.addEventListener("close", () => {
+    document.body.classList.remove("locked");
+    dlgBody.querySelectorAll("video").forEach((v) => v.pause());
+  });
+  dlg.addEventListener("keydown", (e) => {
+    if (e.key === "ArrowRight") openChapter(chapter + 1);
+    if (e.key === "ArrowLeft") openChapter(chapter - 1);
   });
 
   const L = C.letter;
