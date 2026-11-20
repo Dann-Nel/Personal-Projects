@@ -46,6 +46,7 @@ window.CONTENT = {
   // A chapter can also show photos and videos when opened: add  media: ["photos/a.jpg", "photos/b.mp4"]
   story: [
     { title: "How we met", doodle: "star", media: ["photos/wa0030.jpg", "photos/wa0031.jpg"], text: "Write how you met here. Where were you? What was the day like?" },
+    { title: "First photos together", doodle: "camera", media: ["photos/wa0032.jpg", "photos/wa0033.jpg"], text: "Our first photos together. Tell the story behind them: where you were, what the day was for, and how it felt to finally have a picture of the two of you." },
     { title: "Our first conversation", doodle: "chat", text: "What did you talk about? Who spoke first?" },
     { title: "Our first impressions", doodle: "sun", text: "What you thought of him, and what he thought of you." },
     { title: "How we started talking", doodle: "moon", text: "The messages, the late nights, the moment it became every day." },
