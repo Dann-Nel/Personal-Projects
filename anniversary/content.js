@@ -13,6 +13,8 @@ window.CONTENT = {
   startDate: "2025-12-01", // the day you became a couple, as YEAR-MONTH-DAY. CHANGE THIS to your real date.
 
   // The two doodle characters. "a" is you, "b" is him. Make them look like the two of you:
+  //   face:      a face photo cut-out (oval) shown instead of the drawn face, for example "photos/face-her.webp".
+  //              Remove the face line to go back to the drawn face and the hair, glasses and beard options below.
   //   color:     body colour
   //   hair:      "long", "short", "curly", "bun", "tuft" or "none"
   //   hairColor: any colour, for example "#6b4a3a" brown, "#2b2b2b" black, "#e8c36a" blonde, "#b5532a" ginger
@@ -22,8 +24,8 @@ window.CONTENT = {
   //   sprout:    true or false (a little heart growing from the head)
   //   height:    1 is normal, 1.1 is a bit taller, 0.92 a bit shorter
   characters: {
-    a: { color: "#ffc2d1", hair: "long", hairColor: "#1d1a22", glasses: false, beard: false, bow: false, sprout: false, height: 1 },
-    b: { color: "#bde0fe", hair: "short", hairColor: "#6b4a3a", glasses: true, beard: true, bow: false, sprout: false, height: 1.12 },
+    a: { face: "photos/face-her.webp", color: "#ffc2d1", hair: "long", hairColor: "#1d1a22", glasses: false, beard: false, bow: false, sprout: false, height: 1 },
+    b: { face: "photos/face-him.webp", color: "#bde0fe", hair: "short", hairColor: "#6b4a3a", glasses: true, beard: true, bow: false, sprout: false, height: 1.12 },
   },
 
   // Background song. It starts when the envelope is opened and pauses while a video plays.

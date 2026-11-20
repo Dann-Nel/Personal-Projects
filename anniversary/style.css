@@ -97,27 +97,28 @@ section { max-width: 980px; margin: 0 auto; padding: 5rem 16px 3rem; position: r
 .nav a:active { background: var(--pink); }
 
 /* character stage */
-.stage { position: relative; height: 230px; max-width: 560px; margin: 0 auto; }
+.stage { position: relative; height: 252px; max-width: 560px; margin: 0 auto; }
 .stage .ground { position: absolute; left: 4%; right: 4%; bottom: 14px; border-bottom: 3px dashed var(--ink); opacity: .35; }
-.char { position: absolute; bottom: 16px; width: 104px; transition: left 2.2s ease-in-out, transform .4s var(--ease-out); z-index: 1; }
+.stage { --cw: 124px; }
+.char { position: absolute; bottom: 16px; width: var(--cw); transition: left 2.2s ease-in-out, transform .4s var(--ease-out); z-index: 1; }
 .stage[data-state="apart"] .char.a, .stage[data-state="back"] .char.a { left: 2%; }
-.stage[data-state="apart"] .char.b, .stage[data-state="back"] .char.b { left: calc(98% - 104px); }
-.char.a { left: calc(50% - 108px); } .char.b { left: calc(50% + 4px); }
+.stage[data-state="apart"] .char.b, .stage[data-state="back"] .char.b { left: calc(98% - var(--cw)); }
+.char.a { left: calc(50% - var(--cw) - 4px); } .char.b { left: calc(50% + 4px); }
 .stage[data-state="hug"] .char, .stage[data-state="kiss"] .char, .stage[data-state="together"] .char { transition: left .4s var(--spring), transform .4s var(--spring); }
-.stage[data-state="hug"] .char.a { left: calc(50% - 88px); transform: rotate(7deg); }
-.stage[data-state="hug"] .char.b { left: calc(50% - 16px); transform: rotate(-7deg); }
-.stage[data-state="kiss"] .char.a { left: calc(50% - 96px); transform: rotate(14deg); }
-.stage[data-state="kiss"] .char.b { left: calc(50% - 8px); transform: rotate(-14deg); }
+.stage[data-state="hug"] .char.a { left: calc(50% - var(--cw) * .846); transform: rotate(7deg); }
+.stage[data-state="hug"] .char.b { left: calc(50% - var(--cw) * .154); transform: rotate(-7deg); }
+.stage[data-state="kiss"] .char.a { left: calc(50% - var(--cw) * .923); transform: rotate(14deg); }
+.stage[data-state="kiss"] .char.b { left: calc(50% - var(--cw) * .077); transform: rotate(-14deg); }
 .stage[data-state="walking"] .char svg, .stage[data-state="back"] .char svg { animation: bob .45s ease-in-out infinite; }
 .leg { transform-box: fill-box; transform-origin: 50% 0; }
 .stage[data-state="walking"] .leg.l, .stage[data-state="back"] .leg.l { animation: step .45s ease-in-out infinite; }
 .stage[data-state="walking"] .leg.r, .stage[data-state="back"] .leg.r { animation: step .45s ease-in-out infinite reverse; }
 @keyframes step { 0%, 100% { transform: rotate(-22deg); } 50% { transform: rotate(22deg); } }
 .stage .arm { transition: transform .4s var(--spring); }
-.stage[data-state="hug"] .char.a .arm.r { transform: rotate(-75deg) scale(1.5); }
-.stage[data-state="hug"] .char.b .arm.l { transform: rotate(75deg) scale(1.5); }
+.stage[data-state="hug"] .char.a .arm.r { transform: translateY(28px) rotate(-75deg) scale(1.5); }
+.stage[data-state="hug"] .char.b .arm.l { transform: translateY(28px) rotate(75deg) scale(1.5); }
 .stage[data-state="hug"] .eye, .stage[data-state="kiss"] .eye { animation: none; transform: scaleY(.15); }
-.stage-heart { position: absolute; left: 50%; bottom: 150px; translate: -50% 0; font-size: 2.4rem; color: var(--rose); opacity: 0; pointer-events: none; }
+.stage-heart { position: absolute; left: 50%; bottom: 172px; translate: -50% 0; font-size: 2.4rem; color: var(--rose); opacity: 0; pointer-events: none; }
 .stage[data-state="kiss"] .stage-heart, .stage[data-state="hug"] .stage-heart { animation: heartUp 1.6s ease-out infinite; }
 @keyframes heartUp { 0% { opacity: 0; transform: translateY(20px) scale(.8); } 30% { opacity: 1; } 100% { opacity: 0; transform: translateY(-50px) scale(1.3); } }
 .bubble { position: absolute; bottom: 100%; left: 50%; translate: -50% 0; background: #fff; border: 3px solid var(--ink); border-radius: 18px;

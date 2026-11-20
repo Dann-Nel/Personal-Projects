@@ -34,11 +34,11 @@
       <path class="arm l nofill" d="M24 78 q-14 8 -12 22"/>
       <path class="arm r nofill" d="M96 78 q14 8 12 22"/>
       <path fill="${c.color}" d="M60 18 C92 18 102 50 100 82 C98 112 84 124 60 124 C36 124 22 112 20 82 C18 50 28 18 60 18Z"/>
-      ${front}
+      ${c.face ? `<image href="${esc(c.face)}" x="22" y="8" width="76" height="84" preserveAspectRatio="xMidYMid slice"/><ellipse class="nofill" cx="60" cy="50" rx="38" ry="42"/>${c.bow ? extras : ""}` : `${front}
       <circle class="eye ink" cx="46" cy="62" r="4"/><circle class="eye ink" cx="74" cy="62" r="4"/>
       <ellipse class="blush" cx="35" cy="76" rx="7" ry="4.5"/><ellipse class="blush" cx="85" cy="76" rx="7" ry="4.5"/>
       <path class="nofill" d="M52 77 q8 8 16 0"/>
-      ${extras}
+      ${extras}`}
     </g></svg>`;
   }
   const ICONS = {
