@@ -155,6 +155,7 @@ section { max-width: 980px; margin: 0 auto; padding: 5rem 16px 3rem; position: r
 .media-track::-webkit-scrollbar { display: none; }
 .media-track > * { flex: 0 0 100%; width: 100%; height: 100%; object-fit: cover; scroll-snap-align: start; scroll-snap-stop: always; display: block; }
 .media-track video { background: #000; object-fit: contain; }
+.media-track img { object-position: 50% 30%; }
 .media-track img { opacity: 0; transition: opacity .4s ease; }
 .media-track img.loaded { opacity: 1; }
 .media-count { position: absolute; top: 8px; right: 8px; padding: 0 .5rem; border-radius: 999px; background: #3a2e39cc; color: #fff; font: 600 .75rem/1.6 var(--body); }

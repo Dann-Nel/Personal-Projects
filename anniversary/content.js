@@ -17,12 +17,13 @@ window.CONTENT = {
   //   hair:      "long", "short", "curly", "bun", "tuft" or "none"
   //   hairColor: any colour, for example "#6b4a3a" brown, "#2b2b2b" black, "#e8c36a" blonde, "#b5532a" ginger
   //   glasses:   true or false
+  //   beard:     true or false
   //   bow:       true or false (a little bow on the head)
   //   sprout:    true or false (a little heart growing from the head)
   //   height:    1 is normal, 1.1 is a bit taller, 0.92 a bit shorter
   characters: {
-    a: { color: "#ffc2d1", hair: "long", hairColor: "#6b4a3a", glasses: false, bow: true, sprout: false, height: 1 },
-    b: { color: "#bde0fe", hair: "short", hairColor: "#3a2e39", glasses: false, bow: false, sprout: false, height: 1.1 },
+    a: { color: "#ffc2d1", hair: "long", hairColor: "#1d1a22", glasses: false, beard: false, bow: false, sprout: false, height: 1 },
+    b: { color: "#bde0fe", hair: "short", hairColor: "#6b4a3a", glasses: true, beard: true, bow: false, sprout: false, height: 1.12 },
   },
 
   // Background song. It starts when the envelope is opened and pauses while a video plays.
@@ -44,7 +45,7 @@ window.CONTENT = {
   // Each chapter is a card he can tap to open and read in full, so write as much as you like.
   // A chapter can also show photos and videos when opened: add  media: ["photos/a.jpg", "photos/b.mp4"]
   story: [
-    { title: "How we met", doodle: "star", text: "Write how you met here. Where were you? What was the day like?" },
+    { title: "How we met", doodle: "star", media: ["photos/wa0030.jpg", "photos/wa0031.jpg"], text: "Write how you met here. Where were you? What was the day like?" },
     { title: "Our first conversation", doodle: "chat", text: "What did you talk about? Who spoke first?" },
     { title: "Our first impressions", doodle: "sun", text: "What you thought of him, and what he thought of you." },
     { title: "How we started talking", doodle: "moon", text: "The messages, the late nights, the moment it became every day." },
@@ -68,49 +69,52 @@ window.CONTENT = {
   ],
 
   // ---------- Our 365 days together ----------
+  // The photos are in the order they were sent, which may not be the order they happened.
+  // Set each date (for example "March 2026") and change any caption.
   timeline: [
-    { date: "December 2025", caption: "Where it all began", media: ["photos/01.jpg", "photos/01b.jpg", "photos/01.mp4"] },
-    { date: "January 2026", caption: "New year, same us", media: ["photos/02.jpg"] },
-    { date: "February 2026", caption: "Our first Valentine's", media: ["photos/03.jpg"] },
-    { date: "March 2026", caption: "Add a caption", media: ["photos/04.jpg"] },
-    { date: "April 2026", caption: "Add a caption", media: ["photos/05.jpg"] },
-    { date: "May 2026", caption: "Add a caption", media: ["photos/06.jpg"] },
-    { date: "June 2026", caption: "Add a caption", media: ["photos/07.jpg"] },
-    { date: "July 2026", caption: "Add a caption", media: ["photos/08.jpg"] },
-    { date: "August 2026", caption: "Add a caption", media: ["photos/09.jpg"] },
-    { date: "September 2026", caption: "Add a caption", media: ["photos/10.jpg"] },
-    { date: "October 2026", caption: "Add a caption", media: ["photos/11.jpg"] },
-    { date: "November 2026", caption: "Add a caption", media: ["photos/12.jpg"] },
+    { date: "Add the month", caption: "First photos together", media: ["photos/wa0032.jpg", "photos/wa0033.jpg"] },
+    { date: "Add the month", caption: "A sunny afternoon", media: ["photos/wa0034.jpg", "photos/wa0037.jpg"] },
+    { date: "Add the month", caption: "Out in the fresh air", media: ["photos/wa0035.jpg"] },
+    { date: "Add the month", caption: "Mountains and big skies", media: ["photos/wa0036.jpg"] },
+    { date: "Add the month", caption: "Sunset with the dog", media: ["photos/wa0038.jpg"] },
+    { date: "Add the month", caption: "A night out", media: ["photos/wa0039.jpg"] },
+    { date: "Add the month", caption: "Matching reds", media: ["photos/wa0041.jpg"] },
+    { date: "Add the month", caption: "Green jumper days", media: ["photos/wa0042.jpg", "photos/wa0045.jpg"] },
+    { date: "Add the month", caption: "Silly us", media: ["photos/wa0043.jpg", "photos/wa0046.jpg"] },
+    { date: "Add the month", caption: "All dressed up", media: ["photos/wa0044.jpg"] },
+    { date: "Add the month", caption: "By the sea", media: ["photos/wa0047.jpg", "photos/wa0049.jpg", "photos/wa0050.jpg"] },
+    { date: "Add the month", caption: "Bowling night", media: ["photos/wa0051.jpg"] },
   ],
 
   // ---------- If I could relive it all ----------
+  // Titles and photos are matched from what the pictures show. Add the date and your own words.
   relive: [
     {
-      title: "Memory title",
+      title: "Sunset with the dog",
       date: "Date of the memory",
       what: "What happened that day.",
       special: "Why it was special.",
       relive: "Why you would relive it.",
-      media: ["photos/memory1.jpg"],
-      doodle: "star",
-    },
-    {
-      title: "Memory title",
-      date: "Date of the memory",
-      what: "What happened that day.",
-      special: "Why it was special.",
-      relive: "Why you would relive it.",
-      media: ["photos/memory2.jpg"],
+      media: ["photos/wa0038.jpg"],
       doodle: "sun",
     },
     {
-      title: "Memory title",
+      title: "A day by the sea",
       date: "Date of the memory",
       what: "What happened that day.",
       special: "Why it was special.",
       relive: "Why you would relive it.",
-      media: ["photos/memory3.jpg"],
+      media: ["photos/wa0049.jpg", "photos/wa0050.jpg"],
       doodle: "moon",
+    },
+    {
+      title: "Bowling night",
+      date: "Date of the memory",
+      what: "What happened that day.",
+      special: "Why it was special.",
+      relive: "Why you would relive it.",
+      media: ["photos/wa0051.jpg"],
+      doodle: "star",
     },
   ],
 

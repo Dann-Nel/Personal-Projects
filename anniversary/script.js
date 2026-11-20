@@ -24,6 +24,7 @@
     const extras = [
       c.sprout ? `<path class="nofill" d="M60 18 q-3 -6 0 -11"/><path fill="#e5486d" d="M60 9 c-9 -6 -7 -13 -3 -13 c2 0 3 2 3 2 c0 0 1 -2 3 -2 c4 0 6 7 -3 13z"/>` : "",
       c.bow ? `<path fill="#e5486d" d="M80 22 l-13 -8 v16z M80 22 l13 -8 v16z"/><circle fill="#e5486d" cx="80" cy="22" r="4"/>` : "",
+      c.beard ? `<path fill="${c.hairColor || "#3a2e39"}" d="M24 74 C28 114 92 114 96 74 L88 74 C86 98 34 98 32 74Z"/>` : "",
       c.glasses ? `<g class="nofill"><circle cx="46" cy="62" r="10"/><circle cx="74" cy="62" r="10"/><path d="M56 62 h8 M36 60 l-9 -3 M84 60 l9 -3"/></g>` : "",
     ].join("");
     return `<svg class="doodle" viewBox="0 -8 120 156" aria-hidden="true"><g transform="translate(60 138) scale(${h}) translate(-60 -138)">
