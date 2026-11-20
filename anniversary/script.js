@@ -27,19 +27,37 @@
       c.beard ? `<path fill="${c.hairColor || "#3a2e39"}" d="M24 74 C28 114 92 114 96 74 L88 74 C86 98 34 98 32 74Z"/>` : "",
       c.glasses ? `<g class="nofill"><circle cx="46" cy="62" r="10"/><circle cx="74" cy="62" r="10"/><path d="M56 62 h8 M36 60 l-9 -3 M84 60 l9 -3"/></g>` : "",
     ].join("");
+    if (c.face) {
+      // a stickman: the photo head on a drawn body, with a small outfit in the character's colour
+      const dress = c.outfit === "dress", col = c.color;
+      const body = dress
+        ? `<path fill="${col}" d="M50 66 L70 66 L87 117 L33 117Z" style="stroke-linejoin:round"/>`
+        : `<path fill="${col}" d="M47 66 L73 66 L72 101 L48 101Z" style="stroke-linejoin:round"/>`;
+      const legs = dress
+        ? `<g class="leg l"><path class="nofill" d="M51 117 L46 139 h-8"/></g><g class="leg r"><path class="nofill" d="M69 117 L74 139 h8"/></g>`
+        : `<g class="leg l"><path class="nofill" d="M54 101 L48 139 h-8"/></g><g class="leg r"><path class="nofill" d="M66 101 L72 139 h8"/></g>`;
+      const sx = dress ? 52 : 48;
+      return `<svg class="doodle stick" viewBox="0 -8 120 156" aria-hidden="true"><g transform="translate(60 140) scale(${h}) translate(-60 -140)">
+        <ellipse class="shadow" cx="60" cy="141" rx="32" ry="4"/>
+        <g style="stroke-width:3.6">${legs}${body}
+        <path class="arm l nofill" d="M${sx} 71 q-12 6 -16 27"/>
+        <path class="arm r nofill" d="M${120 - sx} 71 q12 6 16 27"/>
+        <path class="nofill" d="M60 60 V68"/></g>
+        <image class="headimg" href="${esc(c.face)}" x="24" y="-1" width="72" height="69" preserveAspectRatio="xMidYMax meet"/>
+      </g></svg>`;
+    }
     return `<svg class="doodle" viewBox="0 -8 120 156" aria-hidden="true"><g transform="translate(60 138) scale(${h}) translate(-60 -138)">
       <g class="leg l"><path class="nofill" d="M48 118 v20 h-8"/></g>
       <g class="leg r"><path class="nofill" d="M72 118 v20 h8"/></g>
       ${back}
       <path class="arm l nofill" d="M24 78 q-14 8 -12 22"/>
       <path class="arm r nofill" d="M96 78 q14 8 12 22"/>
-      ${c.face ? `<path fill="${c.color}" d="M28 82 C22 102 34 124 60 124 C86 124 98 102 92 82 C82 90 38 90 28 82Z"/>`
-        : `<path fill="${c.color}" d="M60 18 C92 18 102 50 100 82 C98 112 84 124 60 124 C36 124 22 112 20 82 C18 50 28 18 60 18Z"/>`}
-      ${c.face ? `<image href="${esc(c.face)}" x="14" y="4" width="92" height="88" preserveAspectRatio="xMidYMax meet"/>${c.bow ? extras : ""}` : `${front}
+      <path fill="${c.color}" d="M60 18 C92 18 102 50 100 82 C98 112 84 124 60 124 C36 124 22 112 20 82 C18 50 28 18 60 18Z"/>
+      ${front}
       <circle class="eye ink" cx="46" cy="62" r="4"/><circle class="eye ink" cx="74" cy="62" r="4"/>
       <ellipse class="blush" cx="35" cy="76" rx="7" ry="4.5"/><ellipse class="blush" cx="85" cy="76" rx="7" ry="4.5"/>
       <path class="nofill" d="M52 77 q8 8 16 0"/>
-      ${extras}`}
+      ${extras}
     </g></svg>`;
   }
   const ICONS = {
