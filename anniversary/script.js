@@ -31,8 +31,8 @@
       // a stickman: the photo head on a drawn body, with a small outfit in the character's colour
       const dress = c.outfit === "dress", col = c.color;
       const body = dress
-        ? `<path fill="${col}" d="M50 66 L70 66 L87 117 L33 117Z" style="stroke-linejoin:round"/>`
-        : `<path fill="${col}" d="M47 66 L73 66 L72 101 L48 101Z" style="stroke-linejoin:round"/>`;
+        ? `<path fill="${col}" d="M50 63 L70 63 L87 117 L33 117Z" style="stroke-linejoin:round"/>`
+        : `<path fill="${col}" d="M47 63 L73 63 L72 101 L48 101Z" style="stroke-linejoin:round"/>`;
       const legs = dress
         ? `<g class="leg l"><path class="nofill" d="M51 117 L46 139 h-8"/></g><g class="leg r"><path class="nofill" d="M69 117 L74 139 h8"/></g>`
         : `<g class="leg l"><path class="nofill" d="M54 101 L48 139 h-8"/></g><g class="leg r"><path class="nofill" d="M66 101 L72 139 h8"/></g>`;
@@ -43,7 +43,7 @@
         <path class="arm l nofill" d="M${sx} 71 q-12 6 -16 27"/>
         <path class="arm r nofill" d="M${120 - sx} 71 q12 6 16 27"/>
         <path class="nofill" d="M60 60 V68"/></g>
-        <image class="headimg" href="${esc(c.face)}" x="16" y="${(40 - (c.faceY ?? 0.52) * 88).toFixed(1)}" width="88" height="88"/>
+        <image class="headimg" href="${esc(c.face)}" x="16" y="${(36 - (c.faceY ?? 0.46) * 88).toFixed(1)}" width="88" height="88"/>
       </g></svg>`;
     }
     return `<svg class="doodle" viewBox="0 -8 120 156" aria-hidden="true"><g transform="translate(60 138) scale(${h}) translate(-60 -138)">
