@@ -15,6 +15,7 @@ window.CONTENT = {
   // The two doodle characters. "a" is you, "b" is him. Make them look like the two of you:
   //   face:      a head cut-out with a see-through background, for example "photos/face-her.webp", shown instead of the drawn face.
   //              Remove the face line to go back to the drawn face and the hair, glasses and beard options below.
+  //   faceY:     where the middle of the face sits in the cut-out, 0 (top) to 1 (bottom). Keep 0.5185 for the supplied cut-outs.
   //   outfit:    "dress" or "tee", for the stickman body that goes under a face photo
   //   color:     body colour (the colour of the outfit)
   //   hair:      "long", "short", "curly", "bun", "tuft" or "none"
@@ -25,8 +26,8 @@ window.CONTENT = {
   //   sprout:    true or false (a little heart growing from the head)
   //   height:    1 is normal, 1.1 is a bit taller, 0.92 a bit shorter
   characters: {
-    a: { face: "photos/face-her.webp", outfit: "dress", color: "#ffc2d1", hair: "long", hairColor: "#1d1a22", glasses: false, beard: false, bow: false, sprout: false, height: 1 },
-    b: { face: "photos/face-him.webp", outfit: "tee", color: "#bde0fe", hair: "short", hairColor: "#6b4a3a", glasses: true, beard: true, bow: false, sprout: false, height: 1.12 },
+    a: { face: "photos/face-her.webp", outfit: "dress", faceY: 0.5185, color: "#ffc2d1", hair: "long", hairColor: "#1d1a22", glasses: false, beard: false, bow: false, sprout: false, height: 1 },
+    b: { face: "photos/face-him.webp", outfit: "tee", faceY: 0.5185, color: "#bde0fe", hair: "short", hairColor: "#6b4a3a", glasses: true, beard: true, bow: false, sprout: false, height: 1.12 },
   },
 
   // Background song. It starts when the envelope is opened and pauses while a video plays.

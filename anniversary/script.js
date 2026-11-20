@@ -43,7 +43,7 @@
         <path class="arm l nofill" d="M${sx} 71 q-12 6 -16 27"/>
         <path class="arm r nofill" d="M${120 - sx} 71 q12 6 16 27"/>
         <path class="nofill" d="M60 60 V68"/></g>
-        <image class="headimg" href="${esc(c.face)}" x="24" y="-1" width="72" height="69" preserveAspectRatio="xMidYMax meet"/>
+        <image class="headimg" href="${esc(c.face)}" x="16" y="${(40 - (c.faceY ?? 0.52) * 88).toFixed(1)}" width="88" height="88"/>
       </g></svg>`;
     }
     return `<svg class="doodle" viewBox="0 -8 120 156" aria-hidden="true"><g transform="translate(60 138) scale(${h}) translate(-60 -138)">
