@@ -13,7 +13,7 @@ window.CONTENT = {
   startDate: "2025-12-01", // the day you became a couple, as YEAR-MONTH-DAY. CHANGE THIS to your real date.
 
   // The two doodle characters. "a" is you, "b" is him. Make them look like the two of you:
-  //   face:      a face photo cut-out (oval) shown instead of the drawn face, for example "photos/face-her.webp".
+  //   face:      a head cut-out with a see-through background, for example "photos/face-her.webp", shown instead of the drawn face.
   //              Remove the face line to go back to the drawn face and the hair, glasses and beard options below.
   //   color:     body colour
   //   hair:      "long", "short", "curly", "bun", "tuft" or "none"
